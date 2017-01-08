@@ -24,12 +24,12 @@ Man.prototype.once = function (eventName, callback) {
     this.on(eventName, one);
     function one() {
         callback.apply(this, arguments);
-        this.removelistener(eventName, one);
+        this.removeListener(eventName, one);
     }
 
     one.g = callback;
 }
-Man.prototype.removelistener = function (eventName, callback) {
+Man.prototype.removeListener = function (eventName, callback) {
     if (this._events[eventName]) {
         this._events[eventName] = this._events[eventName].filter(function (item) {
             return item != callback && item.g != callback;
@@ -45,6 +45,9 @@ function buyHome(who) {
     console.log(`买房${who}`)
 }
 man.on('有钱', buyCar);
-man.on('有钱', buyHome);
-man.removelistener('有钱', buyCar)
+man.once('有钱',buyHome)
+man.removeListener('有钱', buyCar)
+man.emit('有钱', '妹子')
+man.emit('有钱', '妹子')
+man.emit('有钱', '妹子')
 man.emit('有钱', '妹子')
