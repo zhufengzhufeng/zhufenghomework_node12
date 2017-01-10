@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>update</title>
+    <link rel="stylesheet" href="bootstrap.css">
+</head>
+<body class="container">
+<form class="form-horizontal">
+    <div class="form-group">
+        <label for="username" class="control-label">用户名</label>
+        <input type="text" id="username" placeholder="请输入用户名" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="password" class="control-label">密码</label>
+        <input type="text" id="password" placeholder="请输入密码" class="form-control">
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-sm btn-success" id="submit">提交</button>
+        <button type="reset" class="btn btn-sm btn-danger">重置</button>
+    </div>
+</form>
+<script src="ajax.js"></script>
+<script>
+    (function (pro) {
+        function queryURLParam() {
+            var reg = /([^?=&#]+)=([^?=&#]+)/gi;
+            var obj = {};
+            this.replace(reg, function () {
+                obj[arguments[1]] = arguments[2];
+            });
+            return obj;
+        }
+
+        pro.queryURLParam = queryURLParam
+    })(String.prototype);
+
+    var submit = document.querySelector('#submit');
+    var username = document.querySelector('#username');
+    var password = document.querySelector('#password');
+    var id = location.href.queryURLParam()['id'];
+    ajax({
+        url: 'getUser?id=' + id,
+        success: function (result) {
+            username.value = result.username;
+            password.value = result.password
+        }
+    });
+    submit.addEventListener('click', function (e) {
+        if (!(username.value || password.value)) {
+            return alert('不能为空');
+        }
+        var obj = {
+            username: username.value,
+            password: password.value,
+            id: id
+        };
+        ajax({
+            url: '/updateUser',
+            type: 'post',
+            data: obj,
+            success: function (result) {
+                location.href = 'index.html'
+            }
+        })
+    })
+</script>
+</body>
+</html>
