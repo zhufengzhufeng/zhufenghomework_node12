@@ -1,7 +1,6 @@
 /**
- * Created by lxy on 2017/1/8.
+ * Created by chenmeng on 2017/1/8.
  */
-
 function Man() {
     this._events = {}
 }
@@ -25,7 +24,7 @@ Man.prototype.once = function (eventName, callback) {
     this.on(eventName, one);
     function one() {
         callback.apply(this, arguments);
-        this.removelistener(eventName, one);
+        this.removeListener(eventName, one);
     }
 
     one.g = callback;
@@ -42,6 +41,13 @@ var man = new Man();
 function buyCar(who) {
     console.log(`买包${who}`)
 }
-man.on('有钱了', buyCar);
-man.removeListener('有钱了', buyCar);
-man.emit('有钱了', '妹子');
+function buyHome(who) {
+    console.log(`买房${who}`)
+}
+man.on('有钱', buyCar);
+man.once('有钱',buyHome)
+man.removeListener('有钱', buyCar)
+man.emit('有钱', '妹子')
+man.emit('有钱', '妹子')
+man.emit('有钱', '妹子')
+man.emit('有钱', '妹子')

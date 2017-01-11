@@ -1,0 +1,82 @@
+API接口说明文档
+
+1.获取当前页客户数据
+url:'/getAllList?n=xxx',
+type:'get',
+参数：  ？n=1 告诉服务器是第一页请求的数据
+返回：
+    '{
+    "code":0  //0->成功 1->失败
+    "msg":""
+    "total":10,  ->服务器返回的总页数
+    "data":[
+        {
+            "id":xxx,
+            "name":"xxx",
+            "sex":0,   0->男 1->女
+            "age":60
+        },
+        ...
+    ]}'
+2. 增加客户信息
+url:'/addInfo'
+type:'post'
+参数："{
+            "name":"xxx",
+            "sex":男,   0->男 1->女
+            "age":60
+       }"
+
+返回：
+    "
+        {
+            code:0,
+            msg:''
+        }
+    "
+
+3. 获取制定id信息
+url: /getInfo
+type:get
+参数  ?n=x&id = xxx
+ 返回:
+   '{
+      code:0,
+      msg:'',
+      data:{
+         id:1,
+        "name":"xxx",
+        "sex":男,   0->男 1->女
+        "age":60
+      }
+   }'
+
+   4.修改客户信息
+   url : /updateInfo
+   type:post,
+   参数 "{
+               n:xxx,
+              "id" :xxxx,
+              "name":"xxx",
+               "sex":男,   0->男 1->女
+               "age`":60
+         }"
+
+    返回 {
+            code:0,
+            msg:''
+        }
+
+    5.删除客户信息
+    url:/removeInfo
+    type:get
+    参数：？n=x& id=x  传n注意break结束 不能遍历全部 后边没数据 会报错
+    返回
+        "
+        {
+            code:0,
+            msg:""
+        }
+        "
+
+    n=?  (n-1)*10 ~ n*10-1
