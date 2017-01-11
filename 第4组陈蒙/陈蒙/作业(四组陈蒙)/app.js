@@ -149,7 +149,7 @@ var server = http.createServer(function (req, res) {
         req.on('end', function () {
             resultStr = JSON.parse(resultStr)
             resultStr.sex = resultStr.sex == '男' ? 0 : 1;
-            for (var i = 0; i <studentData.length; i++) {
+            for (var i = 0; i < studentData.length; i++) {
                 if (studentData[i].id == resultStr.id) {
                     studentData[i] = resultStr
                 }
@@ -168,7 +168,7 @@ var server = http.createServer(function (req, res) {
     if (pathname == '/removeInfo') {
         var n = query.n;
         var studentId = query.id;
-        for (var i = 0; i <studentData.length; i++) {
+        for (var i = 0; i < studentData.length; i++) {
             if (studentData[i]['id'] == studentId) {
                 studentData.splice(i, 1);
                 break;
