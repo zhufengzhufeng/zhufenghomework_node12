@@ -1,0 +1,160 @@
+<!doctype html>
+<html ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>个人作业</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+    <style>
+        body {
+            padding: 50px;
+        }
+
+        .pagination span {
+            cursor: pointer
+        }
+    </style>
+</head>
+<body class="container" ng-controller="tableCtrl">
+<div style="margin:10px auto;">
+    <label for="search">搜索</label>
+   <!-- <select class="glyphicon-search" ng-model="condition">
+        <option value="name">姓名</option>
+        <option value="age">年龄</option>
+        <option value="id">编号</option>
+    </select>-->
+    <input id="search" type="text" ng-model="query">
+    <button class="btn btn-success pull-right" ng-controller="modalDemo2" ng-click="open()">添加</button>
+</div>
+<table class="table table-hover table-responsive table-bordered container">
+    <thead>
+    <tr class="text-warning bg-primary">
+        <th class="text-center">编号</th>
+        <th class="text-center">姓名</th>
+        <th class="text-center">性别</th>
+        <th class="text-center">年龄</th>
+        <th class="text-center">操作</th>
+    </tr>
+    </thead>
+    <tbody id="oContent" ng-controller="modalDemo">
+    <tr class="text-center" ng-repeat="data in datas | filter:query track by $index">
+        <td>{{data.id}}</td>
+        <td>{{data.name}}</td>
+        <td>{{ data.sex == 0? '男':'女'}}</td>
+        <td>{{data.age}}</td>
+        <td>
+            <button class="btn btn-warning btn-xs" style="outline:none;" ng-click="open(data.id)">
+                编辑
+            </button>
+            <button class="btn btn-danger btn-xs" style="outline:none;" ng-click="removeId(data.id)">删除</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<!--分页-->
+<!--<nav class="text-center">
+    <ul class="pagination">
+        <li><span href="#">首页</span></li>
+        <li><span href="#">&laquo;</span></li>
+
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+
+        <li><span href="#">&raquo;</span></li>
+        <li><span href="#">尾页</span></li>
+    </ul>
+</nav>-->
+
+<script type="text/ng-template" id="modal_window">
+    <div class="modal-header">
+        <h3 class="modal-title">编辑</h3>
+    </div>
+    <div class="modal-body">
+
+
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <label for="username" class="col-sm-2 control-label">用户名 : </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="username" placeholder="用户名" ng-model="res.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="usersex" class="col-sm-2 control-label">性别 : </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="usersex" placeholder="性别" ng-model="res.sex">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="userage" class="col-sm-2 control-label">年龄 : </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="userage" placeholder="年龄" ng-model="res.age">
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">
+            确认
+        </button>
+        <button class="btn btn-warning" ng-click="cancel()">取消</button>
+    </div>
+</script>
+<script type="text/ng-template" id="modal_window2">
+    <div class="modal-header">
+        <h3 class="modal-title">编辑</h3>
+    </div>
+    <div class="modal-body">
+
+
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <label for="addusername" class="col-sm-2 control-label">用户名 : </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="addusername" placeholder="用户名" ng-model="res.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="addusersex" class="col-sm-2 control-label">性别 : </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="addusersex" placeholder="性别" ng-model="res.sex">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="adduserage" class="col-sm-2 control-label">年龄 : </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="adduserage" placeholder="年龄" ng-model="res.age">
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">
+            确认
+        </button>
+        <button class="btn btn-warning" ng-click="cancel()">取消</button>
+    </div>
+</script>
+<script src="./node_modules/angular/angular.js"></script>
+<script src="http://cdn.bootcss.com/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>
