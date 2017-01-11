@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <script></script>
+</head>
+<body>
+<div class="container">
+    <form role="form">
+        <div class="form-group">
+            <label for="username">用户名</label>
+            <input type="text" id="username" placeholder="请输入用户名" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="text" placeholder="请输入密码" id="password" class="form-control">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" id="addUser" type="button" >添加</button>
+            <button class="btn btn-primary" id="updateUser" type="button" >修改</button>
+            <button class="btn btn-warning">重置</button>
+        </div>
+    </form>
+    <ul class="list-group" id="userList">
+        <!--<li class="list-group-item">-->
+           <!--用户名：xxx-->
+           <!--密码：xxx-->
+            <!--<button class="btn btn-danger pull-right btn-xs">删除</button>-->
+        <!--</li>-->
+    </ul>
+</div>
+<script>
+    var userList = document.querySelector('#userList');
+    var username = document.querySelector('#username');
+    var password = document.querySelector('#password');
+    var addUser = document.querySelector('#addUser');
+    var updateUser = document.querySelector('#updateUser');
+
+    function deleteUser(id){
+        var xhr = new XMLHttpRequest();
+        xhr.open('get','/deleteUser?id='+id);
+        xhr.responseType = 'json';
+        xhr.onreadystatechange = function(){
+            xhr.onload = function(){
+                bindData(xhr.response);
+            }
+        }
+        xhr.send(null);
+    }
+
+    //数据绑定 删除和修改事件绑定
+    function bindData(data){
+        var html = '';
+        for(var i=0;i<data.length;i++){
+            var cur = data[i];
+            html+='<li class="list-group-item">';
+            html+='用户名:'+cur.username;
+            html+='密码:'+cur.password;
+            html+=' <button type="button" class="btn btn-danger pull-right btn-xs del" data-id="'+cur.id+'">删除</button>';
+            html+='<button type="button" class="btn btn-danger pull-right btn-xs update-info" data-id="'+cur.id+'" data-name="'+cur.username+'" data-pwd="'+cur.password+'">修改</button>';
+        }
+        userList.innerHTML = html;
+        var del = document.querySelectorAll('.del');
+        for(var i=0;i<del.length;i++){
+            del[i].onclick = function(){
+                var id = this.getAttribute('data-id');
+                deleteUser(id);
+            }
+        }
+        var updateInfo = document.querySelectorAll('.update-info');
+        for(var i=0;i<updateInfo.length;i++){
+            updateInfo[i].onclick = function(){
+                updateUser.setAttribute('data-id' ,this.getAttribute('data-id'));
+                username.value = this.getAttribute('data-name');
+                password.value = this.getAttribute('data-pwd');
+
+            }
+        }
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('get','/userList');
+    xhr.responseType = 'json';
+    xhr.onreadystatechange = function(){
+        xhr.onload = function(){
+            bindData(xhr.response);
+        }
+    }
+    xhr.send(null);
+
+
+    //添加用户
+     addUser.onclick = function(){
+       var u =  username.value;
+       var p =  password.value;
+       if(!u || !p){
+            alert('不能为空');
+            return;
+       }
+         var xhr = new XMLHttpRequest();
+         xhr.open('post','/addUser');
+         xhr.responseType = 'json';
+         xhr.onreadystatechange = function(){
+             xhr.onload = function(){
+                 bindData(xhr.response);
+             }
+         }
+         xhr.send(JSON.stringify({username:u,password:p}));
+     }
+     //修改用户
+    updateUser.onclick = function(){
+        var u =  username.value;
+        var p =  password.value;
+        var id = this.getAttribute('data-id');
+        if(!u || !p){
+            alert('不能为空');
+            return;
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('post','/updateUser');
+        xhr.responseType = 'json';
+        xhr.onreadystatechange = function(){
+            xhr.onload = function(){
+                bindData(xhr.response);
+            }
+        }
+        xhr.send(JSON.stringify({username:u,password:p,id:id}));
+    }
+</script>
+</body>
+</html>
