@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <link rel="stylesheet" href="./bootstrap.css">
+</head>
+<body >
+<div class="container">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="username" class="control-label">用户名</label>
+            <input type="text" id="username" placeholder="请输入用户名" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="password" class="control-label">密码</label>
+            <input type="text" placeholder="请输入密码" id="password" class="form-control">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="button" id="btn">添加</button>
+            <button class="btn btn-warning" type="reset">重置</button>
+            <button class="btn btn-warning" type="button" id="sure">确定修改</button>
+        </div>
+    </form>
+    <ul class="list-group">
+
+    </ul>
+</div>
+<script>
+    //查询用户 /getUsers 增加用户 /addUser 删除用户 /deleteUser?id=1
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET','/getUsers',true);
+    xhr.responseType = 'json';
+    var oUl = document.querySelector('.list-group');
+    function showList(data) { //用来将数据渲染到ul上
+        var str = '';
+        data.forEach(function (item) {
+            str+=`<li class="list-group-item">
+                    用户名:${item.username}  密码:${item.password}
+                    <button class="btn btn-danger pull-right btn-xs" onclick="del(${item.id})">删除</button>
+                    <button class="btn  btn-warning pull-right btn-xs" onclick="change(${item.id})">修改</button>
+                  </li>`
+        });
+        oUl.innerHTML = str;
+    }
+    xhr.onload = function () {
+        var data = xhr.response;
+        showList(data);
+    };
+    xhr.send();
+    // 添加数据
+    var btn = document.querySelector('#btn');
+    var username = document.querySelector('#username');
+    var password = document.querySelector('#password');
+    var sure=document.getElementById('sure');
+    sure.disabled='disabled';
+    btn.addEventListener('click',function () {
+        if(!(username.value&&password.value)){
+            return alert('请输入空');
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST','/addUser',true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            username.value = password.value = '';
+            showList(xhr.response);
+        };
+        var userObj = JSON.stringify({username:username.value,password:password.value});
+        xhr.send(userObj);
+    },false);
+
+//    删除用户
+    function del(id) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE','/deleteUser?id='+id,true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            showList(xhr.response);
+        };
+        xhr.send();
+    }
+//     得到用户信息放入输入框 getUser
+    function change(id){
+        btn.disabled='disabled';
+        sure.disabled='';
+        var xhr = new XMLHttpRequest();
+        xhr.open('get','/getUser?id='+id,true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            var data=xhr.response;
+            username.value=data.username;
+            password.value=data.password
+        };
+        xhr.send();
+    }
+//     修改用户信息 changeUser
+
+    sure.addEventListener('click',function(){
+        sure.disabled='disabled';
+        btn.disabled='';
+        if(!(username.value&&password.value)){
+            return alert('请输X入空');
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST','/changeUser',true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            username.value = password.value = '';
+            showList(xhr.response);
+        };
+        var userObj = JSON.stringify({username:username.value,password:password.value});
+        xhr.send(userObj);
+    },false)
+</script>
+</body>
+</html>
