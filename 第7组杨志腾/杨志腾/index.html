@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="bootstrap.css">
+</head>
+<body>
+<div class="container">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="username" class="control-label">用户名</label>
+            <input type="text" id="username" class="form-control" placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+            <label for="password" class="control-label">密码</label>
+            <input type="text" class="form-control" id="password" placeholder="请输入密码">
+        </div>
+        <div class="form-group">
+
+            <button class="btn btn-primary" type="button" id="btn" style="outline: none">添加</button>
+            <button class="btn btn-warning" type="button" id="ensure">确定修改</button>
+            <!--<button class="btn btn-warning" type="reset" style="outline: none">删除</button>-->
+            <!--<button class="btn btn-warning" type="button" style="outline: none" id="revamp" onclick="rev(${item.id})">修改</button>-->
+        </div>
+    </form>
+    <ul class="list-group">
+
+    </ul>
+</div>
+
+<script>
+    var xhr = new XMLHttpRequest;
+    xhr.open('get', '/getUser', true);
+    var oUl = document.querySelector('.list-group');
+    xhr.responseType = 'json';
+    function showList(data) {
+        var str = '';
+        data.forEach(function (item) {
+            str += `<li class="list-group-item">
+            用户名：${item.username} 密码：${item.password}
+            <button class="btn btn-danger pull-right btn-xs " style="outline: none" id="revamp" onclick="del(${item.id})">删除</button>
+            <button class="btn btn-warning pull-right btn-xs" style="margin-right: 5px;outline: none" onclick="change(${item.id})">修改</button>
+                  </li>`
+        });
+        oUl.innerHTML = str;
+    }
+    xhr.onload = function () {
+        var data = xhr.response;
+        showList(data);
+    };
+    xhr.send();
+    var btn = document.getElementById('btn'),
+        username = document.getElementById('username'),
+        password = document.getElementById('password');
+    btn.addEventListener('click', function () {
+        if (!(username.value && password.value)) {
+            return alert('内容不能为空，请填写')
+        }
+        var xhr = new XMLHttpRequest;
+        xhr.open('post', '/addUser', true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            username.value = password.value = '';
+            showList(xhr.response);
+        };
+        var userObj = JSON.stringify({username: username.value, password: password.value});
+        xhr.send(userObj);
+    },false);
+    function del(id) {
+        var xhr = new XMLHttpRequest;
+        xhr.open('delete', '/deleteUser?id=' + id, true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            showList(xhr.response);
+        };
+        xhr.send()
+    }
+    function change(id) {
+        btn.disabled='disabled';
+        var xhr = new XMLHttpRequest;
+        xhr.open('get', '/getUsers?id=' + id, true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            username.value = xhr.response.username;
+            password.value = xhr.response.password;
+        };
+        xhr.send();
+    }
+    var ensure = document.getElementById('ensure');
+    ensure.addEventListener('click', function () {
+        btn.disabled='';
+        if (!(username.value && password.value)) {
+            return alert('当前不能为空');
+        }
+        var xhr = new XMLHttpRequest;
+        xhr.open('post', '/updateInfo', true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            username.value = password.value = '';
+            showList(xhr.response);
+        };
+        var userObj = JSON.stringify({username: username.value, password: password.value});
+        xhr.send(userObj);
+    }, false);
+</script>
+</body>
+</html>
