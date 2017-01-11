@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+ul, li {
+    list-style: none;
+}
+
+a, a:hover, a:active {
+    color: #000;
+    text-decoration: none;
+}
+
+/*--INDEX--*/
+.box {
+    margin: 10px auto;
+    padding: 20px;
+    width: 600px;
+    border: 1px dashed green;
+}
+
+.box a {
+    display: inline-block;
+    line-height: 35px;
+    color: red;
+    font-size: 20px;
+}
+
+.box .header {
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background: green;
+    color: #FFF;
+    font-size: 16px;
+}
+
+.box .header span {
+    float: left;
+    width: 200px;
+}
+
+.box .content {
+
+}
+
+.box .content li {
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.box .content li span {
+    float: left;
+    width: 200px;
+    height: 30px;
+}
+
+.box .content li span a {
+    display: inline-block;
+    color: #000;
+    font-size: 14px;
+}
+
+/*CSS3*/
+.box .content li:nth-child(even) {
+    background: #EEE;
+}
+
+.box .content li:hover {
+    background: orange;
+}
+
+/*--DETAIL--*/
+input {
+    outline: none;
+}
+
+.detail {
+    margin: 10px auto;
+    padding: 20px;
+    width: 400px;
+    border: 1px dashed green;
+}
+
+#userName {
+    display: inline-block;
+    padding: 0 10px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #DDD;
+}
+
+#submit {
+    display: inline-block;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #DDD;
+    background: green;
+    cursor: pointer;
+    color: #FFF;
+}
